@@ -23,9 +23,6 @@ SELECT id AS value, title AS name FROM roles;
 -- id/first/last
 SELECT id AS value, CONCAT(first_name,' ', last_name) AS name FROM employees
 
-
-
-
 -- update an employee role 
 UPDATE employees SET role_id = ? WHERE id = ?
 -- update employee manager
