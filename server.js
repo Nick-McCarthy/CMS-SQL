@@ -14,15 +14,14 @@ const db = mysql.createConnection(
 );
 
 //-------------------------------------------MAIN----------------------------------------------------
-function main() {
-    inquirer
-        .prompt(
+async function main() {
+        inquirer.prompt(
             [
                 {
                     type: 'list',
                     message: "What would you like to do?",
                     name: 'main',
-                    choices: ['View Departments', 'View Roles', 'View Employees', 'New Department', 'New Role', 'New Employee', 'Update Employee'],
+                    choices: ['View Departments', 'View Roles', 'View Employees', 'New Department', 'New Role', 'New Employee', 'Update Employee', 'End'],
                     validate: (value) => { if (value) { return true } else { return "Please Select an Option" } },
                 },
 
@@ -42,6 +41,8 @@ function main() {
                 newEmployee();
             } else if (main === 'Update Employee') {
                 updateEmployeeRole();
+            } else {
+                process.exit();
             }
         })
         .catch((error) => {
@@ -61,14 +62,14 @@ function main() {
 
 async function newDepartment() {
     try {
-        const answers = await inquirer.prompt([
+        const userInputs = await inquirer.prompt([
             {
                 type: 'input',
                 name: 'name',
                 message: 'What is the department name?'
             }
         ]);
-        insertDepartment(answers);
+        insertDepartment(userInputs);
     } catch (err) {
         console.log(err);
     };
@@ -78,7 +79,7 @@ async function newRole() {
     try {
         const departments = await db.promise().query('SELECT id AS value, name FROM departments');
 
-        const answers = await inquirer.prompt([
+        const userInputs = await inquirer.prompt([
             {
                 type: 'input',
                 name: 'title',
@@ -97,7 +98,7 @@ async function newRole() {
             }
         ]);
 
-        insertRole(answers);
+        insertRole(userInputs);
     } catch (err) {
         console.log(err);
     };
@@ -107,7 +108,7 @@ async function newEmployee() {
     try {
         const employees = await db.promise().query("SELECT id AS value, CONCAT(first_name,' ', last_name) AS name FROM employees");
         const roles = await db.promise().query('SELECT id AS value, title AS name FROM roles');
-        const answers = await inquirer.prompt([
+        const userInputs = await inquirer.prompt([
             {
                 type: 'input',
                 name: 'first_name',
@@ -131,7 +132,7 @@ async function newEmployee() {
                 choices: [{ value: null, name: 'none' }, ...employees[0]]
             }
         ]);
-        insertEmployee(answers);
+        insertEmployee(userInputs);
     } catch {
         console.log(err);
     };
@@ -221,7 +222,7 @@ async function updateEmployeeRole() {
 
         const roles = await db.promise().query('SELECT id AS value, title AS name FROM roles');
 
-        const answers = await inquirer.prompt([
+        const userInputs = await inquirer.prompt([
             {
                 type: 'list',
                 name: 'id',
@@ -235,7 +236,7 @@ async function updateEmployeeRole() {
                 choices: [...roles[0]]
             }]);
 
-        updateDB(answers);
+        updateDB(userInputs);
     } catch (err) {
         console.log(err);
     };
