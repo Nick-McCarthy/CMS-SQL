@@ -14,6 +14,7 @@
  requires node, inquirer 8.2.4, and mysql2
  ## Usage 
  run from cli
+ <br>
  caption: example of terminal commands
 <br>
 ![<img src="terminalcommands1.jpg" width="250"/>](images/terminalcommands1.jpg)
